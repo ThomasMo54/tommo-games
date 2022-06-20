@@ -1,6 +1,7 @@
 package com.motompro.tommogames.client;
 
 import com.motompro.tommogames.client.window.MainWindow;
+import com.motompro.tommogames.client.window.panel.ConnectionPanel;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class TomMoGames {
         try {
             this.client = new GameClient(SERVER_IP, SERVER_PORT);
             this.mainWindow = new MainWindow();
+            mainWindow.showPanel(new ConnectionPanel());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -28,6 +30,10 @@ public class TomMoGames {
 
     public MainWindow getMainWindow() {
         return mainWindow;
+    }
+
+    public GameClient getClient() {
+        return client;
     }
 
     public static void main(String[] args) {

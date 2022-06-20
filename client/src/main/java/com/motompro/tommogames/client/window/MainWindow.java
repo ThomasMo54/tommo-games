@@ -26,4 +26,10 @@ public class MainWindow extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
+    public void showPanel(JPanel panel) {
+        this.setContentPane(panel);
+        this.repaint();
+        this.setVisible(true);
+    }
 }
