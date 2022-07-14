@@ -6,11 +6,16 @@ import com.motompro.tcplib.server.ServerSideClient;
 
 import java.io.IOException;
 
-public class GameServer extends Server implements ClientListener {
+public class GameServer extends Server<GameClient> implements ClientListener {
 
     public GameServer(int port) throws IOException {
         super(port);
         this.addClientListener(this);
+    }
+
+    @Override
+    public GameClient generateClient(ServerSideClient serverSideClient) {
+        return (GameClient) serverSideClient;
     }
 
     @Override
