@@ -24,7 +24,7 @@ public class GameClient extends Client implements ServerListener {
     public void onServerMessage(String message) {
         String[] splitMessage = message.split(" ");
         switch(splitMessage[0]) {
-            case "CONNECTION": {
+            case "LOG": {
                 MainWindow window = TomMoGames.getInstance().getMainWindow();
                 if(splitMessage.length == 1 || splitMessage[1].equals("error")) {
                     window.showPanel(new ConnectionPanel());

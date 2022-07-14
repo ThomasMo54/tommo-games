@@ -11,6 +11,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
     public GameServer(int port) throws IOException {
         super(port);
         this.addClientListener(this);
+        Logger.log("Server started");
     }
 
     @Override
@@ -24,37 +25,38 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
 
     @Override
     public void onClientConnect(GameClient client) {
-
+        Logger.log("Client " + client.getUuid() + " connected");
     }
 
     @Override
     public void onClientDisconnect(GameClient client) {
-
+        Logger.log("Client " + client.getUuid() + " disconnected");
     }
 
     @Override
     public void onClientMessage(GameClient client, String message) {
         String[] splitMessage = message.split(" ");
         switch(splitMessage[0]) {
-            case "CONNECTION": {
+            case "LOG": {
                 if(splitMessage.length == 1) {
                     try {
-                        client.sendMessage("CONNECTION error");
+                        client.sendMessage("LOG error");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                     return;
                 }
-                clientConnected(client, splitMessage[1]);
+                clientLog(client, splitMessage[1]);
                 break;
             }
         }
     }
 
-    private void clientConnected(GameClient client, String name) {
+    private void clientLog(GameClient client, String name) {
         client.setName(name);
         try {
-            client.sendMessage("CONNECTION success");
+            client.sendMessage("LOG success");
+            Logger.log("Client " + client.getUuid() + " logged with name " + name);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
