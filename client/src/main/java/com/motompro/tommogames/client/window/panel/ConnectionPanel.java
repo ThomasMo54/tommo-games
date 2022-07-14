@@ -1,7 +1,10 @@
 package com.motompro.tommogames.client.window.panel;
 
+import com.motompro.tommogames.client.TomMoGames;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class ConnectionPanel extends JPanel {
 
@@ -63,6 +66,16 @@ public class ConnectionPanel extends JPanel {
             errorLabel.setVisible(true);
             return;
         }
-
+        if(name.contains(" ")) {
+            errorLabel.setText("Le nom ne doit pas contenir d'espace");
+            errorLabel.setVisible(true);
+            return;
+        }
+        try {
+            TomMoGames.getInstance().setUsername(name);
+            TomMoGames.getInstance().getClient().sendMessage("CONNECTION " + name);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

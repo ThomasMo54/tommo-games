@@ -6,7 +6,7 @@ import com.motompro.tcplib.server.ServerSideClient;
 
 import java.io.IOException;
 
-public class GameServer extends Server<GameClient> implements ClientListener {
+public class GameServer extends Server<GameClient> implements ClientListener<GameClient> {
 
     public GameServer(int port) throws IOException {
         super(port);
@@ -14,22 +14,49 @@ public class GameServer extends Server<GameClient> implements ClientListener {
     }
 
     @Override
-    public GameClient generateClient(ServerSideClient serverSideClient) {
-        return (GameClient) serverSideClient;
+    protected GameClient generateClient(ServerSideClient serverSideClient) {
+        try {
+            return new GameClient(serverSideClient.getUuid(), serverSideClient.getSocket());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void onClientConnect(ServerSideClient client) {
+    public void onClientConnect(GameClient client) {
 
     }
 
     @Override
-    public void onClientDisconnect(ServerSideClient client) {
+    public void onClientDisconnect(GameClient client) {
 
     }
 
     @Override
-    public void onClientMessage(ServerSideClient client, String message) {
+    public void onClientMessage(GameClient client, String message) {
+        String[] splitMessage = message.split(" ");
+        switch(splitMessage[0]) {
+            case "CONNECTION": {
+                if(splitMessage.length == 1) {
+                    try {
+                        client.sendMessage("CONNECTION error");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return;
+                }
+                clientConnected(client, splitMessage[1]);
+                break;
+            }
+        }
+    }
 
+    private void clientConnected(GameClient client, String name) {
+        client.setName(name);
+        try {
+            client.sendMessage("CONNECTION success");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

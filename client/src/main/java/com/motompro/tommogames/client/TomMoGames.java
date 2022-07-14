@@ -13,6 +13,7 @@ public class TomMoGames {
 
     private final GameClient client;
     private final MainWindow mainWindow;
+    private String username;
 
     protected TomMoGames() {
         try {
@@ -34,6 +35,14 @@ public class TomMoGames {
 
     public GameClient getClient() {
         return client;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public static void main(String[] args) {
