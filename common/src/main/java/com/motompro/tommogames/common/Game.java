@@ -75,6 +75,8 @@ class Builder {
             throw new IllegalArgumentException("name must be specified");
         if(maxPlayers == 0)
             throw new IllegalArgumentException("maxPlayers must be specified");
+        if(minPlayers > maxPlayers)
+            throw new IllegalArgumentException("minPlayers must be lower or equal as maxPlayers");
         if(minPlayers == 0)
             minPlayers = maxPlayers;
         return new Game(id, name, maxPlayers, minPlayers);
