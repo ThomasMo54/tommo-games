@@ -17,7 +17,8 @@ public class GameClient extends Client implements ServerListener {
 
     @Override
     public void onServerDisconnect() {
-
+        TomMoGames.getInstance().getMainWindow().showError("La connexion avec le serveur vient d'être perdue");
+        System.exit(0);
     }
 
     @Override

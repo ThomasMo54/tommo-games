@@ -1,5 +1,7 @@
 package com.motompro.tommogames.client.window;
 
+import com.motompro.tommogames.client.TomMoGames;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,5 +33,12 @@ public class MainWindow extends JFrame {
         this.setContentPane(panel);
         this.repaint();
         this.setVisible(true);
+    }
+
+    public void showError(String message) {
+        JOptionPane.showMessageDialog(this,
+                message,
+                "Erreur",
+                JOptionPane.ERROR_MESSAGE);
     }
 }
