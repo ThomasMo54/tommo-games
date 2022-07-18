@@ -100,6 +100,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                 break;
             default: return;
         }
+        Logger.log(game.getName() + " room " + room.getUuid() + " created with code " + code + " by client " + owner.getUuid());
         room.addClient(owner);
         addRoom(room);
         try {
