@@ -1,11 +1,13 @@
 package com.motompro.tommogames.client.window;
 
-import com.motompro.tommogames.client.TomMoGames;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
+
+    public static final String DEFAULT_ERROR_MESSAGE = "Une erreur est survenue";
+    public static final String COMMUNICATION_ERROR_MESSAGE = "Une erreur de communication avec le serveur est survenue";
+    public static final String WRONG_CODE_ERROR_MESSAGE = "Ce code est invalide";
 
     private static final String TITLE = "TomMo Games";
     private static final Dimension DEFAULT_WINDOW_DIMENSION = new Dimension(1280, 720);

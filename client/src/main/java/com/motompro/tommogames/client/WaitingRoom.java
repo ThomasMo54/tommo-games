@@ -21,14 +21,18 @@ public class WaitingRoom implements ServerListener {
         String[] splitMessage = message.split(" ");
         if(!splitMessage[0].equals("waitingRoom") || splitMessage.length <= 1)
             return;
+        MainWindow window = TomMoGames.getInstance().getMainWindow();
         switch(splitMessage[1]) {
             case "error": {
-                MainWindow window = TomMoGames.getInstance().getMainWindow();
-                window.showError("Une erreur est survenue");
+                window.showError(MainWindow.DEFAULT_ERROR_MESSAGE);
                 window.showPanel(new GamesMenuPanel());
                 break;
             }
-            case "code": {
+            case "wrongCode": {
+                window.showError(MainWindow.WRONG_CODE_ERROR_MESSAGE);
+                break;
+            }
+            case "joinSuccess": {
                 if(splitMessage.length < 3)
                     return;
                 this.panel = new WaitingRoomPanel(game, splitMessage[2]);

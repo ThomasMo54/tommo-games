@@ -123,7 +123,7 @@ class GamePanel extends JPanel implements MouseInputListener {
         joinButton.setVisible(false);
         joinButton.addMouseListener(this);
         joinButton.addActionListener(e -> {
-
+            joinGame();
         });
         constraints.anchor = GridBagConstraints.EAST;
         constraints.gridx = 2;
@@ -136,7 +136,23 @@ class GamePanel extends JPanel implements MouseInputListener {
             TomMoGames.getInstance().getClient().sendMessage("waitingRoom create " + game.getId());
         } catch (IOException e) {
             MainWindow window = TomMoGames.getInstance().getMainWindow();
-            window.showError("Une erreur de communication avec le serveur est survenue");
+            window.showError(MainWindow.COMMUNICATION_ERROR_MESSAGE);
+            window.showPanel(new GamesMenuPanel());
+        }
+    }
+
+    private void joinGame() {
+        MainWindow window = TomMoGames.getInstance().getMainWindow();
+        String code = JOptionPane.showInputDialog(window, "Veuillez entrer le code de la partie", "Code", JOptionPane.INFORMATION_MESSAGE);
+        if(code == null) {
+            window.showError(MainWindow.WRONG_CODE_ERROR_MESSAGE);
+            return;
+        }
+        new WaitingRoom(game);
+        try {
+            TomMoGames.getInstance().getClient().sendMessage("waitingRoom join " + code);
+        } catch (IOException e) {
+            window.showError(MainWindow.COMMUNICATION_ERROR_MESSAGE);
             window.showPanel(new GamesMenuPanel());
         }
     }

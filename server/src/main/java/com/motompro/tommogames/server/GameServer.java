@@ -1,6 +1,7 @@
 package com.motompro.tommogames.server;
 
 import com.motompro.tcplib.server.ClientListener;
+import com.motompro.tcplib.server.Room;
 import com.motompro.tcplib.server.Server;
 import com.motompro.tcplib.server.ServerSideClient;
 import com.motompro.tommogames.common.Game;
@@ -9,6 +10,7 @@ import com.motompro.tommogames.server.room.ChessRoom;
 import com.motompro.tommogames.server.room.GameRoom;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Random;
 
 public class GameServer extends Server<GameClient> implements ClientListener<GameClient> {
@@ -81,6 +83,13 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                 if(splitMessage.length < 3)
                     return;
                 createRoom(GameRegistry.getGames().get(splitMessage[2]), client);
+                break;
+            }
+            case "join": {
+                if(splitMessage.length < 3)
+                    return;
+                joinRoom(splitMessage[2], client);
+                break;
             }
         }
     }
@@ -100,11 +109,27 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                 break;
             default: return;
         }
-        Logger.log(game.getName() + " room " + room.getUuid() + " created with code " + code + " by client " + owner.getUuid());
         room.addClient(owner);
+        Logger.log(game.getName() + " room " + room.getUuid() + " created with code " + code + " by client " + owner.getUuid());
         addRoom(room);
         try {
-            owner.sendMessage("waitingRoom code " + code);
+            owner.sendMessage("waitingRoom joinSuccess " + code);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void joinRoom(String code, GameClient client) {
+        Optional<Room<GameClient>> roomOpt = getRooms().values().stream().filter(room -> ((GameRoom) room).getCode().equals(code)).findFirst();
+        try {
+            if(!roomOpt.isPresent()) {
+                client.sendMessage("waitingRoom wrongCode");
+                return;
+            }
+            Room<GameClient> room = roomOpt.get();
+            room.addClient(client);
+            Logger.log("Client " + client.getUuid() + " joined room " + room.getUuid());
+            client.sendMessage("waitingRoom joinSuccess " + code);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
