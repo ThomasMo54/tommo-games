@@ -1,6 +1,8 @@
 package com.motompro.tommogames.client.window.panel;
 
 import com.motompro.tommogames.client.TomMoGames;
+import com.motompro.tommogames.client.WaitingRoom;
+import com.motompro.tommogames.client.window.MainWindow;
 import com.motompro.tommogames.common.Game;
 import com.motompro.tommogames.common.GameRegistry;
 
@@ -8,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GamesMenuPanel extends JPanel {
@@ -72,7 +75,7 @@ class GamePanel extends JPanel implements MouseInputListener {
     private static final Dimension BUTTON_DIMENSION = new Dimension(100, 45);
 
     private final Game game;
-    private JButton hostButton, joinButton;
+    private JButton createButton, joinButton;
 
     public GamePanel(Game game) {
         this.game = game;
@@ -103,18 +106,18 @@ class GamePanel extends JPanel implements MouseInputListener {
         playersLabel.setForeground(Color.GRAY);
         infoPanel.add(playersLabel);
         // Buttons
-        this.hostButton = new JButton("Héberger");
-        hostButton.setPreferredSize(BUTTON_DIMENSION);
-        hostButton.setVisible(false);
-        hostButton.addMouseListener(this);
-        hostButton.addActionListener(e -> {
-
+        this.createButton = new JButton("Créer");
+        createButton.setPreferredSize(BUTTON_DIMENSION);
+        createButton.setVisible(false);
+        createButton.addMouseListener(this);
+        createButton.addActionListener(e -> {
+            createGame();
         });
         constraints.anchor = GridBagConstraints.EAST;
         constraints.insets = new Insets(0, 0, 0, 15);
         constraints.gridx = 1;
         constraints.weightx = 0;
-        this.add(hostButton, constraints);
+        this.add(createButton, constraints);
         this.joinButton = new JButton("Rejoindre");
         joinButton.setPreferredSize(BUTTON_DIMENSION);
         joinButton.setVisible(false);
@@ -127,17 +130,28 @@ class GamePanel extends JPanel implements MouseInputListener {
         this.add(joinButton, constraints);
     }
 
+    private void createGame() {
+        new WaitingRoom(game);
+        try {
+            TomMoGames.getInstance().getClient().sendMessage("waitingRoom create " + game.getId());
+        } catch (IOException e) {
+            MainWindow window = TomMoGames.getInstance().getMainWindow();
+            window.showError("Une erreur de communication avec le serveur est survenue");
+            window.showPanel(new GamesMenuPanel());
+        }
+    }
+
     @Override
     public void mouseEntered(MouseEvent e) {
         this.setPreferredSize(HOVER_DIMENSION);
-        hostButton.setVisible(true);
+        createButton.setVisible(true);
         joinButton.setVisible(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         this.setPreferredSize(DEFAULT_DIMENSION);
-        hostButton.setVisible(false);
+        createButton.setVisible(false);
         joinButton.setVisible(false);
     }
 

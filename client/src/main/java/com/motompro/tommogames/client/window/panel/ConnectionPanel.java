@@ -73,7 +73,7 @@ public class ConnectionPanel extends JPanel {
         }
         try {
             TomMoGames.getInstance().setUsername(name);
-            TomMoGames.getInstance().getClient().sendMessage("LOG " + name);
+            TomMoGames.getInstance().getClient().sendMessage("log " + name);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
