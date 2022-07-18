@@ -131,7 +131,7 @@ class GamePanel extends JPanel implements MouseInputListener {
     }
 
     private void createGame() {
-        new WaitingRoom(game);
+        new WaitingRoom(game, true);
         try {
             TomMoGames.getInstance().getClient().sendMessage("waitingRoom create " + game.getId());
         } catch (IOException e) {
@@ -148,7 +148,7 @@ class GamePanel extends JPanel implements MouseInputListener {
             window.showError(MainWindow.WRONG_CODE_ERROR_MESSAGE);
             return;
         }
-        new WaitingRoom(game);
+        new WaitingRoom(game, false);
         try {
             TomMoGames.getInstance().getClient().sendMessage("waitingRoom join " + code);
         } catch (IOException e) {

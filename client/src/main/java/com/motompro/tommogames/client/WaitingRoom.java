@@ -10,10 +10,12 @@ import com.motompro.tommogames.common.Game;
 public class WaitingRoom implements ServerListener {
 
     private final Game game;
+    private final boolean owner;
     private WaitingRoomPanel panel;
 
-    public WaitingRoom(Game game) {
+    public WaitingRoom(Game game, boolean owner) {
         this.game = game;
+        this.owner = owner;
         TomMoGames.getInstance().getClient().addServerListener(this);
     }
 
