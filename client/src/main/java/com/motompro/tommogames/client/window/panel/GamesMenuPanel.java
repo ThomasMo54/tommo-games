@@ -7,10 +7,7 @@ import com.motompro.tommogames.common.GameRegistry;
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GamesMenuPanel extends JPanel {
@@ -70,6 +67,10 @@ public class GamesMenuPanel extends JPanel {
 
 class GamePanel extends JPanel implements MouseInputListener {
 
+    private static final Dimension DEFAULT_DIMENSION = new Dimension(0, 60);
+    private static final Dimension HOVER_DIMENSION = new Dimension(0, 80);
+    private static final Dimension BUTTON_DIMENSION = new Dimension(100, 45);
+
     private final Game game;
     private JButton hostButton, joinButton;
 
@@ -79,6 +80,7 @@ class GamePanel extends JPanel implements MouseInputListener {
     }
 
     private void init() {
+        this.setPreferredSize(DEFAULT_DIMENSION);
         this.setBackground(Color.WHITE);
         this.addMouseListener(this);
         this.setLayout(new GridBagLayout());
@@ -102,6 +104,7 @@ class GamePanel extends JPanel implements MouseInputListener {
         infoPanel.add(playersLabel);
         // Buttons
         this.hostButton = new JButton("Héberger");
+        hostButton.setPreferredSize(BUTTON_DIMENSION);
         hostButton.setVisible(false);
         hostButton.addMouseListener(this);
         hostButton.addActionListener(e -> {
@@ -113,6 +116,7 @@ class GamePanel extends JPanel implements MouseInputListener {
         constraints.weightx = 0;
         this.add(hostButton, constraints);
         this.joinButton = new JButton("Rejoindre");
+        joinButton.setPreferredSize(BUTTON_DIMENSION);
         joinButton.setVisible(false);
         joinButton.addMouseListener(this);
         joinButton.addActionListener(e -> {
@@ -125,12 +129,14 @@ class GamePanel extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        this.setPreferredSize(HOVER_DIMENSION);
         hostButton.setVisible(true);
         joinButton.setVisible(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        this.setPreferredSize(DEFAULT_DIMENSION);
         hostButton.setVisible(false);
         joinButton.setVisible(false);
     }
