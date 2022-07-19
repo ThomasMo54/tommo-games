@@ -110,10 +110,13 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
             default: return;
         }
         room.addClient(owner);
-        Logger.log(game.getName() + " room " + room.getUuid() + " created with code " + code + " by client " + owner.getUuid());
+        Logger.log("Room " + room.getUuid() + " (" + game.getName() + ") created with code " + code + " by client " + owner.getUuid());
         addRoom(room);
         try {
             owner.sendMessage("waitingRoom joinSuccess " + code);
+            if(!owner.getName().isPresent())
+                return;
+            owner.sendMessage("waitingRoom playerList " + owner.getUuid() + " " + owner.getName().get());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -130,6 +133,14 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
             room.addClient(client);
             Logger.log("Client " + client.getUuid() + " joined room " + room.getUuid());
             client.sendMessage("waitingRoom joinSuccess " + code);
+            StringBuilder playerListStringBuilder = new StringBuilder();
+            playerListStringBuilder.append("waitingRoom playerList");
+            room.getClients().forEach(gameClient -> {
+                if(!gameClient.getName().isPresent())
+                    return;
+                playerListStringBuilder.append(" ").append(gameClient.getUuid()).append(" ").append(gameClient.getName().get());
+            });
+            room.broadcast(playerListStringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
