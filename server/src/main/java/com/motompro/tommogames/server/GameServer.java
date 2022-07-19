@@ -68,7 +68,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
         }
         client.setName(splitMessage[1]);
         try {
-            client.sendMessage("log success");
+            client.sendMessage("log success " + client.getUuid());
             Logger.log("Client " + client.getUuid() + " logged with name " + splitMessage[1]);
         } catch (IOException e) {
             throw new RuntimeException(e);

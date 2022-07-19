@@ -4,6 +4,7 @@ import com.motompro.tommogames.client.window.MainWindow;
 import com.motompro.tommogames.client.window.panel.ConnectionPanel;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class TomMoGames {
 
@@ -14,6 +15,7 @@ public class TomMoGames {
     private final MainWindow mainWindow;
     private final GameClient client;
     private String username;
+    private UUID uuid;
 
     protected TomMoGames() {
         this.mainWindow = new MainWindow();
@@ -45,6 +47,14 @@ public class TomMoGames {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public static void main(String[] args) {

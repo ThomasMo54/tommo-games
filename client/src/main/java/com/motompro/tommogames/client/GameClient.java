@@ -7,6 +7,7 @@ import com.motompro.tommogames.client.window.panel.ConnectionPanel;
 import com.motompro.tommogames.client.window.panel.GamesMenuPanel;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class GameClient extends Client implements ServerListener {
 
@@ -27,10 +28,11 @@ public class GameClient extends Client implements ServerListener {
         switch(splitMessage[0]) {
             case "log": {
                 MainWindow window = TomMoGames.getInstance().getMainWindow();
-                if(splitMessage.length == 1 || splitMessage[1].equals("error")) {
+                if(splitMessage.length < 3 || splitMessage[1].equals("error")) {
                     window.showPanel(new ConnectionPanel());
                     return;
                 }
+                TomMoGames.getInstance().setUuid(UUID.fromString(splitMessage[2]));
                 window.showPanel(new GamesMenuPanel());
                 break;
             }
