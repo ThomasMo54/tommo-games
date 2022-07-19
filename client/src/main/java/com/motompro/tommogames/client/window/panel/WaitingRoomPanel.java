@@ -10,11 +10,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class WaitingRoomPanel extends JPanel {
 
+    private static final Font TITLE_FONT = new Font("verdana", Font.PLAIN, 16);
+    private static final Font TITLE_VALUE_FONT = new Font("verdana", Font.BOLD, 16);
     private static final Dimension PLAYER_PANEL_DIMENSION = new Dimension(0, 60);
 
     private final Game game;
     private final String code;
 
+    private JLabel playerCountLabel;
     private JPanel playersPanel;
 
     public WaitingRoomPanel(Game game, String code) {
@@ -35,14 +38,14 @@ public class WaitingRoomPanel extends JPanel {
         this.add(leftSidePanel, constraints);
         // Code
         JPanel codePanel = new JPanel(new GridLayout(1, 3));
-        JLabel codeTitleLabel = new JLabel("Code : ");
-        codeTitleLabel.setFont(new Font("verdana", Font.PLAIN, 16));
+        JLabel codeTitleLabel = new JLabel("Code :");
+        codeTitleLabel.setFont(TITLE_FONT);
         codePanel.add(codeTitleLabel);
         JTextField codeLabel = new JTextField(code);
         codeLabel.setEditable(false);
         codeLabel.setBackground(null);
         codeLabel.setBorder(null);
-        codeLabel.setFont(new Font("verdana", Font.BOLD, 16));
+        codeLabel.setFont(TITLE_VALUE_FONT);
         codePanel.add(codeLabel);
         JButton copyButton = new JButton("Copier");
         copyButton.addActionListener(e -> {
@@ -54,6 +57,17 @@ public class WaitingRoomPanel extends JPanel {
         constraints.insets = new Insets(20, 20, 20, 0);
         constraints.weighty = 0;
         leftSidePanel.add(codePanel, constraints);
+        // Player count
+        JPanel playerCountPanel = new JPanel(new GridLayout(1, 2));
+        JLabel playerCountTitleLabel = new JLabel("Joueurs : ");
+        playerCountTitleLabel.setFont(TITLE_FONT);
+        playerCountPanel.add(playerCountTitleLabel);
+        this.playerCountLabel = new JLabel("0 / " + game.getMaxPlayers());
+        playerCountLabel.setFont(TITLE_VALUE_FONT);
+        playerCountPanel.add(playerCountLabel);
+        constraints.insets = new Insets(0, 20, 20, 0);
+        constraints.gridy = 1;
+        leftSidePanel.add(playerCountPanel, constraints);
         // Player list
         JPanel listContentPanel = new JPanel(new BorderLayout());
         this.playersPanel = new JPanel(new GridBagLayout());
@@ -64,7 +78,7 @@ public class WaitingRoomPanel extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         constraints.insets = new Insets(0, 0, 0, 0);
         constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         constraints.weighty = 1;
         leftSidePanel.add(scrollPane, constraints);
 
@@ -76,6 +90,7 @@ public class WaitingRoomPanel extends JPanel {
     }
 
     public void updatePlayerList(Map<UUID, String> players) {
+        playerCountLabel.setText(players.size() + " / " + game.getMaxPlayers());
         playersPanel.removeAll();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.weightx = 1;
