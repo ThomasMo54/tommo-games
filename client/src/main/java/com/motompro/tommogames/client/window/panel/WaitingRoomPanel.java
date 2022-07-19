@@ -1,10 +1,14 @@
 package com.motompro.tommogames.client.window.panel;
 
+import com.motompro.tommogames.client.GameClient;
+import com.motompro.tommogames.client.TomMoGames;
+import com.motompro.tommogames.client.WaitingRoom;
 import com.motompro.tommogames.common.Game;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,15 +18,13 @@ public class WaitingRoomPanel extends JPanel {
     private static final Font TITLE_VALUE_FONT = new Font("verdana", Font.BOLD, 16);
     private static final Dimension PLAYER_PANEL_DIMENSION = new Dimension(0, 60);
 
-    private final Game game;
-    private final String code;
+    private final WaitingRoom waitingRoom;
 
     private JLabel playerCountLabel;
     private JPanel playersPanel;
 
-    public WaitingRoomPanel(Game game, String code) {
-        this.game = game;
-        this.code = code;
+    public WaitingRoomPanel(WaitingRoom waitingRoom) {
+        this.waitingRoom = waitingRoom;
         init();
     }
 
@@ -34,14 +36,14 @@ public class WaitingRoomPanel extends JPanel {
         constraints.anchor = GridBagConstraints.FIRST_LINE_START;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weighty = 0;
-        constraints.weightx = 1;
+        constraints.weightx = 0.25;
         this.add(leftSidePanel, constraints);
         // Code
         JPanel codePanel = new JPanel(new GridLayout(1, 3));
         JLabel codeTitleLabel = new JLabel("Code :");
         codeTitleLabel.setFont(TITLE_FONT);
         codePanel.add(codeTitleLabel);
-        JTextField codeLabel = new JTextField(code);
+        JTextField codeLabel = new JTextField(waitingRoom.getCode());
         codeLabel.setEditable(false);
         codeLabel.setBackground(null);
         codeLabel.setBorder(null);
@@ -49,12 +51,12 @@ public class WaitingRoomPanel extends JPanel {
         codePanel.add(codeLabel);
         JButton copyButton = new JButton("Copier");
         copyButton.addActionListener(e -> {
-            StringSelection selection = new StringSelection(code);
+            StringSelection selection = new StringSelection(waitingRoom.getCode());
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
         });
         codePanel.add(copyButton);
         constraints.fill = GridBagConstraints.NONE;
-        constraints.insets = new Insets(20, 20, 20, 0);
+        constraints.insets = new Insets(20, 20, 15, 0);
         constraints.weighty = 0;
         leftSidePanel.add(codePanel, constraints);
         // Player count
@@ -62,7 +64,7 @@ public class WaitingRoomPanel extends JPanel {
         JLabel playerCountTitleLabel = new JLabel("Joueurs : ");
         playerCountTitleLabel.setFont(TITLE_FONT);
         playerCountPanel.add(playerCountTitleLabel);
-        this.playerCountLabel = new JLabel("0 / " + game.getMaxPlayers());
+        this.playerCountLabel = new JLabel("0 / " + waitingRoom.getGame().getMaxPlayers());
         playerCountLabel.setFont(TITLE_VALUE_FONT);
         playerCountPanel.add(playerCountLabel);
         constraints.insets = new Insets(0, 20, 20, 0);
@@ -84,13 +86,36 @@ public class WaitingRoomPanel extends JPanel {
 
         // Right side panel
         JPanel rightSidePanel = new JPanel(new GridBagLayout());
+        constraints.gridy = 0;
         constraints.weighty = 0;
         constraints.weightx = 1;
         this.add(rightSidePanel, constraints);
+        // Buttons panel
+        JPanel buttonsPanel = new JPanel(new GridBagLayout());
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        rightSidePanel.add(buttonsPanel);
+        JButton leaveButton = new JButton("Quitter");
+        leaveButton.setPreferredSize(new Dimension(100, 40));
+        leaveButton.addActionListener(e -> {
+            GameClient client = TomMoGames.getInstance().getClient();
+            client.removeServerListener(waitingRoom);
+            TomMoGames.getInstance().getMainWindow().showPanel(new GamesMenuPanel());
+            try {
+                client.sendMessage("waitingRoom leave");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        buttonsPanel.add(leaveButton, constraints);
+        // Rules panel
+        JPanel rulesPanel = new JPanel(new GridBagLayout());
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridy = 1;
+        rightSidePanel.add(rulesPanel);
     }
 
     public void updatePlayerList(Map<UUID, String> players) {
-        playerCountLabel.setText(players.size() + " / " + game.getMaxPlayers());
+        playerCountLabel.setText(players.size() + " / " + waitingRoom.getGame().getMaxPlayers());
         playersPanel.removeAll();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.weightx = 1;

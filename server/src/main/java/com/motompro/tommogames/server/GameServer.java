@@ -40,6 +40,13 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
     @Override
     public void onClientDisconnect(GameClient client) {
         Logger.log("Client " + client.getUuid() + " disconnected");
+        client.getRoom().ifPresent(room -> {
+            if(!(room instanceof GameRoom))
+                return;
+            GameRoom gameRoom = (GameRoom) room;
+            if(gameRoom.getOwner().getUuid().equals(client.getUuid()))
+               closeRoom(gameRoom);
+        });
     }
 
     @Override
@@ -91,6 +98,17 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                 joinRoom(splitMessage[2], client);
                 break;
             }
+            case "leave": {
+                if(!client.getRoom().isPresent() || !(client.getRoom().get() instanceof GameRoom))
+                    return;
+                GameRoom room = (GameRoom) client.getRoom().get();
+                room.removeClient(client);
+                if(client.getUuid().equals(room.getOwner().getUuid())) {
+                    closeRoom(room);
+                    return;
+                }
+                sendRoomPlayerList(room);
+            }
         }
     }
 
@@ -105,7 +123,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
         GameRoom room;
         switch(game.getId()) {
             case GameRegistry.CHESS_ID:
-                room = new ChessRoom(code);
+                room = new ChessRoom(code, owner);
                 break;
             default: return;
         }
@@ -133,16 +151,25 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
             room.addClient(client);
             Logger.log("Client " + client.getUuid() + " joined room " + room.getUuid());
             client.sendMessage("waitingRoom joinSuccess " + code);
-            StringBuilder playerListStringBuilder = new StringBuilder();
-            playerListStringBuilder.append("waitingRoom playerList");
-            room.getClients().forEach(gameClient -> {
-                if(!gameClient.getName().isPresent())
-                    return;
-                playerListStringBuilder.append(" ").append(gameClient.getUuid()).append(" ").append(gameClient.getName().get());
-            });
-            room.broadcast(playerListStringBuilder.toString());
+            sendRoomPlayerList(room);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void sendRoomPlayerList(Room<GameClient> room) {
+        StringBuilder playerListStringBuilder = new StringBuilder();
+        playerListStringBuilder.append("waitingRoom playerList");
+        room.getClients().stream()
+                .filter(gameClient -> gameClient.getName().isPresent())
+                .forEach(gameClient -> {
+                    playerListStringBuilder.append(" ").append(gameClient.getUuid()).append(" ").append(gameClient.getName().get());
+                });
+        room.broadcast(playerListStringBuilder.toString());
+    }
+
+    private void closeRoom(Room<GameClient> room) {
+        room.broadcast("waitingRoom kick");
+        room.removeClients(room.getClients());
     }
 }

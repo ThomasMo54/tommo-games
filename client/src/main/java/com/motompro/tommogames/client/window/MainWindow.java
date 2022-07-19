@@ -43,4 +43,11 @@ public class MainWindow extends JFrame {
                 "Erreur",
                 JOptionPane.ERROR_MESSAGE);
     }
+
+    public void showWarning(String title, String message) {
+        JOptionPane.showMessageDialog(this,
+                message,
+                title,
+                JOptionPane.WARNING_MESSAGE);
+    }
 }

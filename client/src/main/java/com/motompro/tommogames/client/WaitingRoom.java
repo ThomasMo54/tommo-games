@@ -13,6 +13,7 @@ public class WaitingRoom implements ServerListener {
 
     private final Game game;
     private final boolean owner;
+    private String code;
     private WaitingRoomPanel panel;
     private final Map<UUID, String> players = new HashMap<>();
 
@@ -20,6 +21,18 @@ public class WaitingRoom implements ServerListener {
         this.game = game;
         this.owner = owner;
         TomMoGames.getInstance().getClient().addServerListener(this);
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public boolean isOwner() {
+        return owner;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     @Override
@@ -45,7 +58,8 @@ public class WaitingRoom implements ServerListener {
             case "joinSuccess": {
                 if(splitMessage.length < 3)
                     return;
-                this.panel = new WaitingRoomPanel(game, splitMessage[2]);
+                this.code = splitMessage[2];
+                this.panel = new WaitingRoomPanel(this);
                 TomMoGames.getInstance().getMainWindow().showPanel(panel);
                 break;
             }
@@ -56,6 +70,12 @@ public class WaitingRoom implements ServerListener {
                 for(int i = 2; i < splitMessage.length; i += 2)
                     players.put(UUID.fromString(splitMessage[i]), splitMessage[i + 1]);
                 panel.updatePlayerList(players);
+                break;
+            }
+            case "kick": {
+                client.removeServerListener(this);
+                window.showPanel(new GamesMenuPanel());
+                window.showWarning("Exclusion", "Vous avez été exclu de la salle d'attente");
                 break;
             }
         }
