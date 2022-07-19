@@ -11,16 +11,18 @@ public class TomMoGames {
     private static final String SERVER_IP = "127.0.0.1";
     private static final int SERVER_PORT = 54150;
 
-    private final GameClient client;
     private final MainWindow mainWindow;
+    private final GameClient client;
     private String username;
 
     protected TomMoGames() {
+        this.mainWindow = new MainWindow();
+        mainWindow.showPanel(new ConnectionPanel());
         try {
             this.client = new GameClient(SERVER_IP, SERVER_PORT);
-            this.mainWindow = new MainWindow();
-            mainWindow.showPanel(new ConnectionPanel());
         } catch (IOException e) {
+            mainWindow.showError(MainWindow.COMMUNICATION_ERROR_MESSAGE);
+            System.exit(0);
             throw new RuntimeException(e);
         }
     }
