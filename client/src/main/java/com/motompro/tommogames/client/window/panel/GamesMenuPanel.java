@@ -1,7 +1,8 @@
 package com.motompro.tommogames.client.window.panel;
 
 import com.motompro.tommogames.client.TomMoGames;
-import com.motompro.tommogames.client.WaitingRoom;
+import com.motompro.tommogames.client.game.chess.ChessWaitingRoom;
+import com.motompro.tommogames.client.waitingRoom.WaitingRoom;
 import com.motompro.tommogames.client.window.MainWindow;
 import com.motompro.tommogames.common.Game;
 import com.motompro.tommogames.common.GameRegistry;
@@ -131,7 +132,7 @@ class GamePanel extends JPanel implements MouseInputListener {
     }
 
     private void createGame() {
-        new WaitingRoom(game, true);
+        initWaitingRoom(true);
         try {
             TomMoGames.getInstance().getClient().sendMessage("waitingRoom create " + game.getId());
         } catch (IOException e) {
@@ -146,12 +147,21 @@ class GamePanel extends JPanel implements MouseInputListener {
         String code = JOptionPane.showInputDialog(window, "Veuillez entrer le code de la partie", "Code", JOptionPane.INFORMATION_MESSAGE);
         if(code == null)
             return;
-        new WaitingRoom(game, false);
+        initWaitingRoom(false);
         try {
             TomMoGames.getInstance().getClient().sendMessage("waitingRoom join " + code);
         } catch (IOException e) {
             window.showError(MainWindow.COMMUNICATION_ERROR_MESSAGE);
             window.showPanel(new GamesMenuPanel());
+        }
+    }
+
+    private void initWaitingRoom(boolean owner) {
+        switch(game.getId()) {
+            case GameRegistry.CHESS_ID: {
+                new ChessWaitingRoom(owner);
+                break;
+            }
         }
     }
 

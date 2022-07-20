@@ -2,7 +2,7 @@ package com.motompro.tommogames.client.window.panel;
 
 import com.motompro.tommogames.client.GameClient;
 import com.motompro.tommogames.client.TomMoGames;
-import com.motompro.tommogames.client.WaitingRoom;
+import com.motompro.tommogames.client.waitingRoom.WaitingRoom;
 import com.motompro.tommogames.client.window.MainWindow;
 
 import javax.swing.*;
@@ -126,7 +126,14 @@ public class WaitingRoomPanel extends JPanel {
         JPanel rulesPanel = new JPanel(new GridBagLayout());
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridy = 1;
-        rightSidePanel.add(rulesPanel);
+        rightSidePanel.add(rulesPanel, constraints);
+        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.fill = GridBagConstraints.NONE;
+        AtomicInteger atomicGridY = new AtomicInteger();
+        waitingRoom.getRulePanels().forEach(rulePanel -> {
+            constraints.gridy = atomicGridY.getAndIncrement();
+            rulesPanel.add(rulePanel, constraints);
+        });
     }
 
     public void updatePlayerList(Map<UUID, String> players) {

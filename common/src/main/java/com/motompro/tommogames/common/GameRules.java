@@ -7,7 +7,7 @@ public class GameRules {
 
     private final Map<String, Object> rules = new HashMap<>();
 
-    public GameRules add(String rule, Object value) {
+    public GameRules set(String rule, Object value) {
         rules.put(rule, value);
         return this;
     }
@@ -22,14 +22,6 @@ public class GameRules {
 
     public int getInteger(String rule) {
         return (int) rules.get(rule);
-    }
-
-    public long getLong(String rule) {
-        return (long) rules.get(rule);
-    }
-
-    public float getFloat(String rule) {
-        return (long) rules.get(rule);
     }
 
     public double getDouble(String rule) {

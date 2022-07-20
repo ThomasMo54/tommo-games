@@ -1,30 +1,30 @@
-package com.motompro.tommogames.client;
+package com.motompro.tommogames.client.waitingRoom;
 
 import com.motompro.tcplib.client.Client;
 import com.motompro.tcplib.client.ServerListener;
+import com.motompro.tommogames.client.TomMoGames;
+import com.motompro.tommogames.client.waitingRoom.rulePanel.RulePanel;
 import com.motompro.tommogames.client.window.MainWindow;
 import com.motompro.tommogames.client.window.panel.GamesMenuPanel;
 import com.motompro.tommogames.client.window.panel.WaitingRoomPanel;
 import com.motompro.tommogames.common.Game;
+import com.motompro.tommogames.common.GameRules;
 
 import java.util.*;
 
-public class WaitingRoom implements ServerListener {
+public abstract class WaitingRoom implements ServerListener {
 
-    private final Game game;
     private final boolean owner;
     private String code;
     private WaitingRoomPanel panel;
     private final Map<UUID, String> players = new HashMap<>();
+    private final GameRules rules;
+    protected final List<RulePanel> rulePanels = new ArrayList<>();
 
-    public WaitingRoom(Game game, boolean owner) {
-        this.game = game;
+    public WaitingRoom(boolean owner) {
         this.owner = owner;
+        this.rules = getGame().getDefaultRules();
         TomMoGames.getInstance().getClient().addServerListener(this);
-    }
-
-    public Game getGame() {
-        return game;
     }
 
     public boolean isOwner() {
@@ -34,6 +34,16 @@ public class WaitingRoom implements ServerListener {
     public String getCode() {
         return code;
     }
+
+    public GameRules getRules() {
+        return rules;
+    }
+
+    public List<RulePanel> getRulePanels() {
+        return rulePanels;
+    }
+
+    public abstract Game getGame();
 
     @Override
     public void onServerMessage(String message) {

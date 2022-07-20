@@ -15,8 +15,8 @@ public class GameRegistry {
                 .withName("Échecs")
                 .withMaxPlayers(2)
                 .withDefaultRules(new GameRules()
-                        .add("timer", false)
-                        .add("timerTime", 60)
+                        .set("timer", false)
+                        .set("timerTime", 60)
                 )
                 .build()
         );
