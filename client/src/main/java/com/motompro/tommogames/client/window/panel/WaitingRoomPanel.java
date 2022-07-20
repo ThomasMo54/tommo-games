@@ -33,13 +33,29 @@ public class WaitingRoomPanel extends JPanel {
         GridBagConstraints constraints = new GridBagConstraints();
         // Left side panel
         JPanel leftSidePanel = new JPanel(new GridBagLayout());
-        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.BOTH;
-        constraints.weighty = 0;
+        constraints.weighty = 1;
         constraints.weightx = 0.25;
         this.add(leftSidePanel, constraints);
+        // Game
+        JPanel gamePanel = new JPanel(new GridLayout(1, 2));
+        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.insets = new Insets(20, 20, 10, 0);
+        constraints.weighty = 0;
+        leftSidePanel.add(gamePanel, constraints);
+        JLabel gameTitleLabel = new JLabel("Jeu : ");
+        gameTitleLabel.setFont(TITLE_FONT);
+        gamePanel.add(gameTitleLabel);
+        JLabel gameLabel = new JLabel(waitingRoom.getGame().getName());
+        gameLabel.setFont(TITLE_VALUE_FONT);
+        gamePanel.add(gameLabel);
         // Code
         JPanel codePanel = new JPanel(new GridLayout(1, 3));
+        constraints.insets = new Insets(0, 20, 10, 0);
+        constraints.gridy = 1;
+        leftSidePanel.add(codePanel, constraints);
         JLabel codeTitleLabel = new JLabel("Code :");
         codeTitleLabel.setFont(TITLE_FONT);
         codePanel.add(codeTitleLabel);
@@ -55,21 +71,17 @@ public class WaitingRoomPanel extends JPanel {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
         });
         codePanel.add(copyButton);
-        constraints.fill = GridBagConstraints.NONE;
-        constraints.insets = new Insets(20, 20, 15, 0);
-        constraints.weighty = 0;
-        leftSidePanel.add(codePanel, constraints);
         // Player count
         JPanel playerCountPanel = new JPanel(new GridLayout(1, 2));
+        constraints.insets = new Insets(0, 20, 20, 0);
+        constraints.gridy = 2;
+        leftSidePanel.add(playerCountPanel, constraints);
         JLabel playerCountTitleLabel = new JLabel("Joueurs : ");
         playerCountTitleLabel.setFont(TITLE_FONT);
         playerCountPanel.add(playerCountTitleLabel);
         this.playerCountLabel = new JLabel("0 / " + waitingRoom.getGame().getMaxPlayers());
         playerCountLabel.setFont(TITLE_VALUE_FONT);
         playerCountPanel.add(playerCountLabel);
-        constraints.insets = new Insets(0, 20, 20, 0);
-        constraints.gridy = 1;
-        leftSidePanel.add(playerCountPanel, constraints);
         // Player list
         JPanel listContentPanel = new JPanel(new BorderLayout());
         this.playersPanel = new JPanel(new GridBagLayout());
@@ -80,18 +92,20 @@ public class WaitingRoomPanel extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         constraints.insets = new Insets(0, 0, 0, 0);
         constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         constraints.weighty = 1;
         leftSidePanel.add(scrollPane, constraints);
 
         // Right side panel
         JPanel rightSidePanel = new JPanel(new GridBagLayout());
+        constraints.anchor = GridBagConstraints.NORTHEAST;
         constraints.gridy = 0;
-        constraints.weighty = 0;
+        constraints.weighty = 1;
         constraints.weightx = 1;
         this.add(rightSidePanel, constraints);
         // Buttons panel
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
+        constraints.anchor = GridBagConstraints.EAST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         rightSidePanel.add(buttonsPanel);
         JButton leaveButton = new JButton("Quitter");
