@@ -12,6 +12,8 @@ public class IntegerSpinnerRulePanel extends RulePanel {
         GridBagConstraints constraints = new GridBagConstraints();
         SpinnerModel model = new SpinnerNumberModel(defaultValue, min, max, stepSize);
         this.spinner = new JSpinner(model);
+        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.insets = new Insets(5, 0, 0, 0);
         constraints.gridy = 1;
         this.add(spinner, constraints);
     }

@@ -104,11 +104,26 @@ public class WaitingRoomPanel extends JPanel {
         constraints.weighty = 1;
         constraints.weightx = 1;
         this.add(rightSidePanel, constraints);
+        // Rules panel
+        JPanel rulesPanel = new JPanel(new GridBagLayout());
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.insets = new Insets(20, 20, 0, 20);
+        rightSidePanel.add(rulesPanel, constraints);
+        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.insets = new Insets(0, 0, 10, 0);
+        constraints.weighty = 0;
+        AtomicInteger atomicGridY = new AtomicInteger();
+        waitingRoom.getRulePanels().forEach(rulePanel -> {
+            constraints.gridy = atomicGridY.getAndIncrement();
+            rulesPanel.add(rulePanel, constraints);
+        });
         // Buttons panel
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
-        constraints.anchor = GridBagConstraints.EAST;
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        rightSidePanel.add(buttonsPanel);
+        constraints.insets = new Insets(20, 20, 20, 20);
+        constraints.gridy = 1;
+        rightSidePanel.add(buttonsPanel, constraints);
         JButton leaveButton = new JButton("Quitter");
         leaveButton.setPreferredSize(new Dimension(100, 40));
         leaveButton.addActionListener(e -> {
@@ -121,19 +136,10 @@ public class WaitingRoomPanel extends JPanel {
                 ex.printStackTrace();
             }
         });
-        buttonsPanel.add(leaveButton, constraints);
-        // Rules panel
-        JPanel rulesPanel = new JPanel(new GridBagLayout());
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridy = 1;
-        rightSidePanel.add(rulesPanel, constraints);
-        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.anchor = GridBagConstraints.EAST;
         constraints.fill = GridBagConstraints.NONE;
-        AtomicInteger atomicGridY = new AtomicInteger();
-        waitingRoom.getRulePanels().forEach(rulePanel -> {
-            constraints.gridy = atomicGridY.getAndIncrement();
-            rulesPanel.add(rulePanel, constraints);
-        });
+        constraints.gridy = 0;
+        buttonsPanel.add(leaveButton, constraints);
     }
 
     public void updatePlayerList(Map<UUID, String> players) {
@@ -176,6 +182,7 @@ class PlayerPanel extends JPanel {
         GridBagConstraints constraints = new GridBagConstraints();
         this.setPreferredSize(DIMENSION);
         JLabel nameLabel = new JLabel(name);
+        nameLabel.setFont(new Font("verdana", Font.PLAIN, 18));
         constraints.anchor = GridBagConstraints.WEST;
         constraints.fill = GridBagConstraints.NONE;
         constraints.insets = new Insets(0 ,20, 0, 0);
