@@ -1,9 +1,10 @@
 package com.motompro.tommogames.server.room;
 
 import com.motompro.tcplib.server.Room;
+import com.motompro.tommogames.common.Game;
 import com.motompro.tommogames.server.GameClient;
 
-public class GameRoom extends Room<GameClient> {
+public abstract class GameRoom extends Room<GameClient> {
 
     private final String code;
     private final GameClient owner;
@@ -20,4 +21,6 @@ public class GameRoom extends Room<GameClient> {
     public GameClient getOwner() {
         return owner;
     }
+
+    public abstract Game getGame();
 }

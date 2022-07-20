@@ -55,6 +55,12 @@ public class WaitingRoom implements ServerListener {
                 window.showPanel(new GamesMenuPanel());
                 break;
             }
+            case "full": {
+                client.removeServerListener(this);
+                window.showError(MainWindow.ROOM_FULL_ERROR_MESSAGE);
+                window.showPanel(new GamesMenuPanel());
+                break;
+            }
             case "joinSuccess": {
                 if(splitMessage.length < 3)
                     return;

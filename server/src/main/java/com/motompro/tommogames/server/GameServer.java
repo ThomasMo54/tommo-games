@@ -141,13 +141,17 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
     }
 
     private void joinRoom(String code, GameClient client) {
-        Optional<Room<GameClient>> roomOpt = getRooms().values().stream().filter(room -> ((GameRoom) room).getCode().equals(code)).findFirst();
+        Optional<GameRoom> roomOpt = getRooms().values().stream().filter(room -> room instanceof GameRoom && ((GameRoom) room).getCode().equals(code)).findFirst().map(room -> (GameRoom) room);
         try {
             if(!roomOpt.isPresent()) {
                 client.sendMessage("waitingRoom wrongCode");
                 return;
             }
-            Room<GameClient> room = roomOpt.get();
+            GameRoom room = roomOpt.get();
+            if(room.getClientNumber() >= room.getGame().getMaxPlayers()) {
+                client.sendMessage("waitingRoom full");
+                return;
+            }
             room.addClient(client);
             Logger.log("Client " + client.getUuid() + " joined room " + room.getUuid());
             client.sendMessage("waitingRoom joinSuccess " + code);
@@ -157,7 +161,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
         }
     }
 
-    private void sendRoomPlayerList(Room<GameClient> room) {
+    private void sendRoomPlayerList(GameRoom room) {
         StringBuilder playerListStringBuilder = new StringBuilder();
         playerListStringBuilder.append("waitingRoom playerList");
         room.getClients().stream()
@@ -168,7 +172,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
         room.broadcast(playerListStringBuilder.toString());
     }
 
-    private void closeRoom(Room<GameClient> room) {
+    private void closeRoom(GameRoom room) {
         room.broadcast("waitingRoom kick");
         room.removeClients(room.getClients());
     }
