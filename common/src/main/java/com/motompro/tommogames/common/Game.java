@@ -6,12 +6,14 @@ public class Game {
     private final String name;
     private final int maxPlayers;
     private final int minPlayers;
+    private final GameRules defaultRules;
 
-    protected Game(String id, String name, int maxPlayers, int minPlayers) {
+    protected Game(String id, String name, int maxPlayers, int minPlayers, GameRules defaultRules) {
         this.id = id;
         this.name = name;
         this.maxPlayers = maxPlayers;
         this.minPlayers = minPlayers;
+        this.defaultRules = defaultRules;
     }
 
     public String getId() {
@@ -30,6 +32,10 @@ public class Game {
         return minPlayers;
     }
 
+    public GameRules getDefaultRules() {
+        return defaultRules;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -41,6 +47,7 @@ class Builder {
     private String name;
     private int maxPlayers = 0;
     private int minPlayers = 0;
+    private GameRules defaultRules = new GameRules();
 
     protected Builder() {}
 
@@ -68,6 +75,11 @@ class Builder {
         return this;
     }
 
+    public Builder withDefaultRules(GameRules defaultRules) {
+        this.defaultRules = defaultRules;
+        return this;
+    }
+
     public Game build() {
         if(id == null)
             throw new IllegalArgumentException("id must be specified");
@@ -79,6 +91,6 @@ class Builder {
             throw new IllegalArgumentException("minPlayers must be lower or equal as maxPlayers");
         if(minPlayers == 0)
             minPlayers = maxPlayers;
-        return new Game(id, name, maxPlayers, minPlayers);
+        return new Game(id, name, maxPlayers, minPlayers, defaultRules);
     }
 }
