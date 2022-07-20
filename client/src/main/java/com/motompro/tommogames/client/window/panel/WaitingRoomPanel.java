@@ -3,7 +3,7 @@ package com.motompro.tommogames.client.window.panel;
 import com.motompro.tommogames.client.GameClient;
 import com.motompro.tommogames.client.TomMoGames;
 import com.motompro.tommogames.client.WaitingRoom;
-import com.motompro.tommogames.common.Game;
+import com.motompro.tommogames.client.window.MainWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,8 @@ public class WaitingRoomPanel extends JPanel {
 
     private static final Font TITLE_FONT = new Font("verdana", Font.PLAIN, 16);
     private static final Font TITLE_VALUE_FONT = new Font("verdana", Font.BOLD, 16);
-    private static final Dimension PLAYER_PANEL_DIMENSION = new Dimension(0, 60);
+    private static final Color PLAYER_PANEL_COLOR_1 = new Color(240, 240, 240);
+    private static final Color PLAYER_PANEL_COLOR_2 = new Color(225, 225, 225);
 
     private final WaitingRoom waitingRoom;
 
@@ -36,7 +37,7 @@ public class WaitingRoomPanel extends JPanel {
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weighty = 1;
-        constraints.weightx = 0.25;
+        constraints.weightx = 0.15;
         this.add(leftSidePanel, constraints);
         // Game
         JPanel gamePanel = new JPanel(new GridLayout(1, 2));
@@ -84,8 +85,8 @@ public class WaitingRoomPanel extends JPanel {
         playerCountPanel.add(playerCountLabel);
         // Player list
         JPanel listContentPanel = new JPanel(new BorderLayout());
+        listContentPanel.setBackground(Color.WHITE);
         this.playersPanel = new JPanel(new GridBagLayout());
-        playersPanel.setBackground(Color.WHITE);
         listContentPanel.add(playersPanel, BorderLayout.NORTH);
         JScrollPane scrollPane = new JScrollPane(listContentPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -132,24 +133,60 @@ public class WaitingRoomPanel extends JPanel {
         playerCountLabel.setText(players.size() + " / " + waitingRoom.getGame().getMaxPlayers());
         playersPanel.removeAll();
         GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 1;
         constraints.weighty = 0;
         AtomicInteger atomicGridY = new AtomicInteger();
         players.forEach((playerUuid, playerName) -> {
-            JPanel playerPanel = new JPanel(new GridBagLayout());
-            playerPanel.setBackground(Color.WHITE);
-            playerPanel.setPreferredSize(PLAYER_PANEL_DIMENSION);
-            constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-            constraints.fill = GridBagConstraints.HORIZONTAL;
+            boolean hasKickButton = waitingRoom.isOwner() && !playerUuid.equals(TomMoGames.getInstance().getUuid());
+            PlayerPanel playerPanel = new PlayerPanel(playerUuid, playerName, hasKickButton);
+            playerPanel.setBackground(atomicGridY.get() % 2 == 0 ? PLAYER_PANEL_COLOR_1 : PLAYER_PANEL_COLOR_2);
             constraints.gridy = atomicGridY.getAndIncrement();
             playersPanel.add(playerPanel, constraints);
-            JLabel nameLabel = new JLabel(playerName);
-            constraints.anchor = GridBagConstraints.WEST;
-            constraints.fill = GridBagConstraints.NONE;
-            constraints.insets = new Insets(0 ,20, 0, 0);
-            constraints.gridy = 0;
-            playerPanel.add(nameLabel, constraints);
         });
         this.revalidate();
+    }
+}
+
+class PlayerPanel extends JPanel {
+
+    private static final Dimension DIMENSION = new Dimension(0, 60);
+
+    private final UUID uuid;
+    private final String name;
+    private final boolean hasKickButton;
+
+    public PlayerPanel(UUID uuid, String name, boolean hasKickButton) {
+        this.uuid = uuid;
+        this.name = name;
+        this.hasKickButton = hasKickButton;
+        init();
+    }
+
+    private void init() {
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        this.setPreferredSize(DIMENSION);
+        JLabel nameLabel = new JLabel(name);
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.insets = new Insets(0 ,20, 0, 0);
+        constraints.weightx = 1;
+        this.add(nameLabel, constraints);
+        if(!hasKickButton)
+            return;
+        JButton kickButton = new JButton("Exclure");
+        kickButton.addActionListener(e -> {
+            try {
+                TomMoGames.getInstance().getClient().sendMessage("waitingRoom kick " + uuid);
+            } catch (IOException ex) {
+                TomMoGames.getInstance().getMainWindow().showError(MainWindow.DEFAULT_ERROR_MESSAGE);
+            }
+        });
+        constraints.anchor = GridBagConstraints.EAST;
+        constraints.insets = new Insets(0 ,0, 0, 20);
+        constraints.gridx = 1;
+        this.add(kickButton, constraints);
     }
 }

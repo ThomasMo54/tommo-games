@@ -12,10 +12,11 @@ import com.motompro.tommogames.server.room.GameRoom;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 public class GameServer extends Server<GameClient> implements ClientListener<GameClient> {
 
-    private static final int CODE_LENGTH = 6;
+    private static final int CODE_LENGTH = 4;
 
     public GameServer(int port) throws IOException {
         super(port);
@@ -108,6 +109,12 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                     return;
                 }
                 sendRoomPlayerList(room);
+                break;
+            }
+            case "kick": {
+                if(splitMessage.length < 3 || !client.getRoom().isPresent() || !(client.getRoom().get() instanceof GameRoom))
+                    return;
+                kickRoom((GameRoom) client.getRoom().get(), getClients().get(UUID.fromString(splitMessage[2])));
             }
         }
     }
@@ -175,5 +182,17 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
     private void closeRoom(GameRoom room) {
         room.broadcast("waitingRoom kick");
         room.removeClients(room.getClients());
+    }
+
+    private void kickRoom(GameRoom room, GameClient kickedClient) {
+        if(kickedClient == null)
+            return;
+        room.removeClient(kickedClient);
+        sendRoomPlayerList(room);
+        try {
+            kickedClient.sendMessage("waitingRoom kick");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

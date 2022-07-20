@@ -144,10 +144,8 @@ class GamePanel extends JPanel implements MouseInputListener {
     private void joinGame() {
         MainWindow window = TomMoGames.getInstance().getMainWindow();
         String code = JOptionPane.showInputDialog(window, "Veuillez entrer le code de la partie", "Code", JOptionPane.INFORMATION_MESSAGE);
-        if(code == null) {
-            window.showError(MainWindow.WRONG_CODE_ERROR_MESSAGE);
+        if(code == null)
             return;
-        }
         new WaitingRoom(game, false);
         try {
             TomMoGames.getInstance().getClient().sendMessage("waitingRoom join " + code);

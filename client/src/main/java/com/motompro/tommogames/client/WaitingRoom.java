@@ -44,19 +44,25 @@ public class WaitingRoom implements ServerListener {
         MainWindow window = TomMoGames.getInstance().getMainWindow();
         switch(splitMessage[1]) {
             case "error": {
-                client.removeServerListener(this);
+                synchronized(client.getServerListeners()) {
+                    client.removeServerListener(this);
+                }
                 window.showError(MainWindow.DEFAULT_ERROR_MESSAGE);
                 window.showPanel(new GamesMenuPanel());
                 break;
             }
             case "wrongCode": {
-                client.removeServerListener(this);
+                synchronized(client.getServerListeners()) {
+                    client.removeServerListener(this);
+                }
                 window.showError(MainWindow.WRONG_CODE_ERROR_MESSAGE);
                 window.showPanel(new GamesMenuPanel());
                 break;
             }
             case "full": {
-                client.removeServerListener(this);
+                synchronized(client.getServerListeners()) {
+                    client.removeServerListener(this);
+                }
                 window.showError(MainWindow.ROOM_FULL_ERROR_MESSAGE);
                 window.showPanel(new GamesMenuPanel());
                 break;
@@ -79,7 +85,9 @@ public class WaitingRoom implements ServerListener {
                 break;
             }
             case "kick": {
-                client.removeServerListener(this);
+                synchronized(client.getServerListeners()) {
+                    client.removeServerListener(this);
+                }
                 window.showPanel(new GamesMenuPanel());
                 window.showWarning("Exclusion", "Vous avez été exclu de la salle d'attente");
                 break;
