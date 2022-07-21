@@ -19,7 +19,7 @@ public abstract class WaitingRoom implements ServerListener {
     private WaitingRoomPanel panel;
     private final Map<UUID, String> players = new HashMap<>();
     private final GameRules rules;
-    protected final List<RulePanel> rulePanels = new ArrayList<>();
+    protected final Map<String, RulePanel> rulePanels = new HashMap<>();
 
     public WaitingRoom(boolean owner) {
         this.owner = owner;
@@ -39,7 +39,7 @@ public abstract class WaitingRoom implements ServerListener {
         return rules;
     }
 
-    public List<RulePanel> getRulePanels() {
+    public Map<String, RulePanel> getRulePanels() {
         return rulePanels;
     }
 

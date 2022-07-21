@@ -7,8 +7,8 @@ public class IntegerSpinnerRulePanel extends RulePanel {
 
     private final JSpinner spinner;
 
-    public IntegerSpinnerRulePanel(String rule, String title, int defaultValue, int min, int max, int stepSize) {
-        super(rule, title, defaultValue);
+    public IntegerSpinnerRulePanel(String title, int defaultValue, int min, int max, int stepSize) {
+        super(title, defaultValue);
         GridBagConstraints constraints = new GridBagConstraints();
         SpinnerModel model = new SpinnerNumberModel(defaultValue, min, max, stepSize);
         this.spinner = new JSpinner(model);
@@ -21,5 +21,10 @@ public class IntegerSpinnerRulePanel extends RulePanel {
     @Override
     public Object getValue() {
         return spinner.getValue();
+    }
+
+    @Override
+    public void setValue(Object value) {
+        spinner.setValue(value);
     }
 }

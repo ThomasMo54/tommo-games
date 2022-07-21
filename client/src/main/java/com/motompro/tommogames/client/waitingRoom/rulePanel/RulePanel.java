@@ -7,12 +7,10 @@ public abstract class RulePanel extends JPanel {
 
     private static final Font TITLE_FONT = new Font("verdana", Font.BOLD, 14);
 
-    protected final String rule;
     protected final String title;
     protected final Object defaultValue;
 
-    public RulePanel(String rule, String title, Object defaultValue) {
-        this.rule = rule;
+    public RulePanel(String title, Object defaultValue) {
         this.title = title;
         this.defaultValue = defaultValue;
         this.setLayout(new GridBagLayout());
@@ -23,9 +21,7 @@ public abstract class RulePanel extends JPanel {
         this.add(titleLabel, constraints);
     }
 
-    public String getRule() {
-        return rule;
-    }
-
     public abstract Object getValue();
+
+    public abstract void setValue(Object value);
 }

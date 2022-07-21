@@ -11,8 +11,8 @@ public class OneChoiceRulePanel<T> extends RulePanel {
     private final Map<String, T> choices;
     private final ButtonGroup buttonGroup = new ButtonGroup();
 
-    public OneChoiceRulePanel(String rule, String title, Map<String, T> choices, T defaultValue) {
-        super(rule, title, defaultValue);
+    public OneChoiceRulePanel(String title, Map<String, T> choices, T defaultValue) {
+        super(title, defaultValue);
         this.choices = choices;
         GridBagConstraints constraints = new GridBagConstraints();
         AtomicInteger atomicGridY = new AtomicInteger(1);
@@ -36,5 +36,14 @@ public class OneChoiceRulePanel<T> extends RulePanel {
             return choices.get(radio.getText());
         }
         return defaultValue;
+    }
+
+    @Override
+    public void setValue(Object value) {
+        Enumeration<AbstractButton> buttons = buttonGroup.getElements();
+        while(buttons.hasMoreElements()) {
+            JRadioButton radio = (JRadioButton) buttons.nextElement();
+            radio.setSelected(value.equals(choices.get(radio.getText())));
+        }
     }
 }
