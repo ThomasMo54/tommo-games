@@ -1,7 +1,7 @@
 package com.motompro.tommogames.server.room;
 
 import com.motompro.tcplib.server.Room;
-import com.motompro.tommogames.common.Game;
+import com.motompro.tommogames.common.GameData;
 import com.motompro.tommogames.server.GameClient;
 
 public abstract class GameRoom extends Room<GameClient> {
@@ -22,5 +22,5 @@ public abstract class GameRoom extends Room<GameClient> {
         return owner;
     }
 
-    public abstract Game getGame();
+    public abstract GameData getGame();
 }

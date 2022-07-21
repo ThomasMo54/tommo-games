@@ -7,10 +7,10 @@ public class GameRegistry {
 
     public static final String CHESS_ID = "chess";
 
-    private static final Map<String, Game> GAMES = new HashMap<>();
+    private static final Map<String, GameData> GAMES = new HashMap<>();
 
     static {
-        GAMES.put(CHESS_ID, Game.builder()
+        GAMES.put(CHESS_ID, GameData.builder()
                 .withId(CHESS_ID)
                 .withName("Échecs")
                 .withMaxPlayers(2)
@@ -22,7 +22,7 @@ public class GameRegistry {
         );
     }
 
-    public static Map<String, Game> getGames() {
+    public static Map<String, GameData> getGames() {
         return GAMES;
     }
 }

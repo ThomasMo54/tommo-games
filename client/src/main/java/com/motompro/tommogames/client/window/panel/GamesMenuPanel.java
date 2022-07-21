@@ -2,9 +2,8 @@ package com.motompro.tommogames.client.window.panel;
 
 import com.motompro.tommogames.client.TomMoGames;
 import com.motompro.tommogames.client.game.chess.ChessWaitingRoom;
-import com.motompro.tommogames.client.waitingRoom.WaitingRoom;
 import com.motompro.tommogames.client.window.MainWindow;
-import com.motompro.tommogames.common.Game;
+import com.motompro.tommogames.common.GameData;
 import com.motompro.tommogames.common.GameRegistry;
 
 import javax.swing.*;
@@ -75,11 +74,11 @@ class GamePanel extends JPanel implements MouseInputListener {
     private static final Dimension HOVER_DIMENSION = new Dimension(0, 80);
     private static final Dimension BUTTON_DIMENSION = new Dimension(100, 45);
 
-    private final Game game;
+    private final GameData gameData;
     private JButton createButton, joinButton;
 
-    public GamePanel(Game game) {
-        this.game = game;
+    public GamePanel(GameData gameData) {
+        this.gameData = gameData;
         init();
     }
 
@@ -98,11 +97,11 @@ class GamePanel extends JPanel implements MouseInputListener {
         constraints.gridx = 0;
         constraints.weightx = 1;
         this.add(infoPanel, constraints);
-        JLabel nameLabel = new JLabel(game.getName());
+        JLabel nameLabel = new JLabel(gameData.getName());
         nameLabel.setFont(new Font("verdana", Font.PLAIN, 12));
         infoPanel.add(nameLabel);
-        String playersNumber = game.getMinPlayers() == game.getMaxPlayers() ? String.valueOf(game.getMaxPlayers()) : game.getMinPlayers() + "-" + game.getMaxPlayers();
-        String playersText = playersNumber + " Joueur" + (game.getMaxPlayers() > 1 ? "s" : "");
+        String playersNumber = gameData.getMinPlayers() == gameData.getMaxPlayers() ? String.valueOf(gameData.getMaxPlayers()) : gameData.getMinPlayers() + "-" + gameData.getMaxPlayers();
+        String playersText = playersNumber + " Joueur" + (gameData.getMaxPlayers() > 1 ? "s" : "");
         JLabel playersLabel = new JLabel(playersText);
         playersLabel.setForeground(Color.GRAY);
         infoPanel.add(playersLabel);
@@ -134,7 +133,7 @@ class GamePanel extends JPanel implements MouseInputListener {
     private void createGame() {
         initWaitingRoom(true);
         try {
-            TomMoGames.getInstance().getClient().sendMessage("waitingRoom create " + game.getId());
+            TomMoGames.getInstance().getClient().sendMessage("waitingRoom create " + gameData.getId());
         } catch (IOException e) {
             MainWindow window = TomMoGames.getInstance().getMainWindow();
             window.showError(MainWindow.COMMUNICATION_ERROR_MESSAGE);
@@ -157,7 +156,7 @@ class GamePanel extends JPanel implements MouseInputListener {
     }
 
     private void initWaitingRoom(boolean owner) {
-        switch(game.getId()) {
+        switch(gameData.getId()) {
             case GameRegistry.CHESS_ID: {
                 new ChessWaitingRoom(owner);
                 break;

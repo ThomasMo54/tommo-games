@@ -1,10 +1,9 @@
 package com.motompro.tommogames.server;
 
 import com.motompro.tcplib.server.ClientListener;
-import com.motompro.tcplib.server.Room;
 import com.motompro.tcplib.server.Server;
 import com.motompro.tcplib.server.ServerSideClient;
-import com.motompro.tommogames.common.Game;
+import com.motompro.tommogames.common.GameData;
 import com.motompro.tommogames.common.GameRegistry;
 import com.motompro.tommogames.server.room.ChessRoom;
 import com.motompro.tommogames.server.room.GameRoom;
@@ -125,7 +124,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
         }
     }
 
-    private void createRoom(Game game, GameClient owner) {
+    private void createRoom(GameData gameData, GameClient owner) {
         // Generate random new code
         StringBuilder codeBuilder = new StringBuilder();
         do {
@@ -134,14 +133,14 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
         } while(getRooms().values().stream().anyMatch(room -> ((GameRoom) room).getCode().equals(codeBuilder.toString())));
         String code = codeBuilder.toString();
         GameRoom room;
-        switch(game.getId()) {
+        switch(gameData.getId()) {
             case GameRegistry.CHESS_ID:
                 room = new ChessRoom(code, owner);
                 break;
             default: return;
         }
         room.addClient(owner);
-        Logger.log("Room " + room.getUuid() + " (" + game.getName() + ") created with code " + code + " by client " + owner.getUuid());
+        Logger.log("Room " + room.getUuid() + " (" + gameData.getName() + ") created with code " + code + " by client " + owner.getUuid());
         addRoom(room);
         try {
             owner.sendMessage("waitingRoom joinSuccess " + code);

@@ -1,6 +1,6 @@
 package com.motompro.tommogames.common;
 
-public class Game {
+public class GameData {
 
     private final String id;
     private final String name;
@@ -8,7 +8,7 @@ public class Game {
     private final int minPlayers;
     private final GameRules defaultRules;
 
-    protected Game(String id, String name, int maxPlayers, int minPlayers, GameRules defaultRules) {
+    protected GameData(String id, String name, int maxPlayers, int minPlayers, GameRules defaultRules) {
         this.id = id;
         this.name = name;
         this.maxPlayers = maxPlayers;
@@ -80,7 +80,7 @@ class Builder {
         return this;
     }
 
-    public Game build() {
+    public GameData build() {
         if(id == null)
             throw new IllegalArgumentException("id must be specified");
         if(name == null)
@@ -91,6 +91,6 @@ class Builder {
             throw new IllegalArgumentException("minPlayers must be lower or equal as maxPlayers");
         if(minPlayers == 0)
             minPlayers = maxPlayers;
-        return new Game(id, name, maxPlayers, minPlayers, defaultRules);
+        return new GameData(id, name, maxPlayers, minPlayers, defaultRules);
     }
 }

@@ -7,7 +7,7 @@ import com.motompro.tommogames.client.waitingRoom.rulePanel.RulePanel;
 import com.motompro.tommogames.client.window.MainWindow;
 import com.motompro.tommogames.client.window.panel.GamesMenuPanel;
 import com.motompro.tommogames.client.window.panel.WaitingRoomPanel;
-import com.motompro.tommogames.common.Game;
+import com.motompro.tommogames.common.GameData;
 import com.motompro.tommogames.common.GameRules;
 
 import java.util.*;
@@ -18,12 +18,12 @@ public abstract class WaitingRoom implements ServerListener {
     private String code;
     private WaitingRoomPanel panel;
     private final Map<UUID, String> players = new HashMap<>();
-    private final GameRules rules;
+    protected final GameRules rules;
     protected final Map<String, RulePanel> rulePanels = new HashMap<>();
 
     public WaitingRoom(boolean owner) {
         this.owner = owner;
-        this.rules = getGame().getDefaultRules();
+        this.rules = getGameData().getDefaultRules();
         TomMoGames.getInstance().getClient().addServerListener(this);
     }
 
@@ -39,11 +39,17 @@ public abstract class WaitingRoom implements ServerListener {
         return rules;
     }
 
+    public void updateRules() {
+        rulePanels.forEach((rule, panel) -> rules.set(rule, panel.getValue()));
+    }
+
     public Map<String, RulePanel> getRulePanels() {
         return rulePanels;
     }
 
-    public abstract Game getGame();
+    public abstract GameData getGameData();
+
+    public abstract void startGame();
 
     @Override
     public void onServerMessage(String message) {

@@ -23,6 +23,7 @@ public class WaitingRoomPanel extends JPanel {
 
     private JLabel playerCountLabel;
     private JPanel playersPanel;
+    private JButton startButton;
 
     public WaitingRoomPanel(WaitingRoom waitingRoom) {
         this.waitingRoom = waitingRoom;
@@ -49,7 +50,7 @@ public class WaitingRoomPanel extends JPanel {
         JLabel gameTitleLabel = new JLabel("Jeu : ");
         gameTitleLabel.setFont(TITLE_FONT);
         gamePanel.add(gameTitleLabel);
-        JLabel gameLabel = new JLabel(waitingRoom.getGame().getName());
+        JLabel gameLabel = new JLabel(waitingRoom.getGameData().getName());
         gameLabel.setFont(TITLE_VALUE_FONT);
         gamePanel.add(gameLabel);
         // Code
@@ -80,7 +81,7 @@ public class WaitingRoomPanel extends JPanel {
         JLabel playerCountTitleLabel = new JLabel("Joueurs : ");
         playerCountTitleLabel.setFont(TITLE_FONT);
         playerCountPanel.add(playerCountTitleLabel);
-        this.playerCountLabel = new JLabel("0 / " + waitingRoom.getGame().getMaxPlayers());
+        this.playerCountLabel = new JLabel("0 / " + waitingRoom.getGameData().getMaxPlayers());
         playerCountLabel.setFont(TITLE_VALUE_FONT);
         playerCountPanel.add(playerCountLabel);
         // Player list
@@ -136,14 +137,26 @@ public class WaitingRoomPanel extends JPanel {
                 ex.printStackTrace();
             }
         });
-        constraints.anchor = GridBagConstraints.EAST;
         constraints.fill = GridBagConstraints.NONE;
         constraints.gridy = 0;
+        constraints.weightx = 0;
         buttonsPanel.add(leaveButton, constraints);
+        if(!waitingRoom.isOwner())
+            return;
+        this.startButton = new JButton("Commencer");
+        startButton.setEnabled(waitingRoom.getGameData().getMinPlayers() == 1);
+        startButton.setPreferredSize(new Dimension(130, 40));
+        startButton.addActionListener(e -> {
+            waitingRoom.startGame();
+        });
+        constraints.gridx = 1;
+        buttonsPanel.add(startButton, constraints);
     }
 
     public void updatePlayerList(Map<UUID, String> players) {
-        playerCountLabel.setText(players.size() + " / " + waitingRoom.getGame().getMaxPlayers());
+        playerCountLabel.setText(players.size() + " / " + waitingRoom.getGameData().getMaxPlayers());
+        if(startButton != null)
+            startButton.setEnabled(players.size() >= waitingRoom.getGameData().getMinPlayers());
         playersPanel.removeAll();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.FIRST_LINE_START;

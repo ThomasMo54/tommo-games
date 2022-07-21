@@ -3,7 +3,7 @@ package com.motompro.tommogames.client.game.chess;
 import com.motompro.tommogames.client.waitingRoom.WaitingRoom;
 import com.motompro.tommogames.client.waitingRoom.rulePanel.IntegerSpinnerRulePanel;
 import com.motompro.tommogames.client.waitingRoom.rulePanel.OneChoiceRulePanel;
-import com.motompro.tommogames.common.Game;
+import com.motompro.tommogames.common.GameData;
 import com.motompro.tommogames.common.GameRegistry;
 
 import java.util.HashMap;
@@ -16,8 +16,14 @@ public class ChessWaitingRoom extends WaitingRoom {
     }
 
     @Override
-    public Game getGame() {
+    public GameData getGameData() {
         return GameRegistry.getGames().get(GameRegistry.CHESS_ID);
+    }
+
+    @Override
+    public void startGame() {
+        updateRules();
+        new ChessGame(getGameData(), rules);
     }
 
     private void initRulePanels() {
