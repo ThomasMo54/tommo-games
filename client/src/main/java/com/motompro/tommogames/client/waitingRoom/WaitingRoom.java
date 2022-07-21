@@ -39,10 +39,6 @@ public abstract class WaitingRoom implements ServerListener {
         return rules;
     }
 
-    public void updateRules() {
-        rulePanels.forEach((rule, panel) -> rules.set(rule, panel.getValue()));
-    }
-
     public Map<String, RulePanel> getRulePanels() {
         return rulePanels;
     }
@@ -113,6 +109,13 @@ public abstract class WaitingRoom implements ServerListener {
                     return;
                 for(int i = 2; i < splitMessage.length; i += 2)
                     rulePanels.get(splitMessage[i]).setValue(splitMessage[i + 1]);
+                break;
+            }
+            case "start": {
+                synchronized(client.getServerListeners()) {
+                    client.removeServerListener(this);
+                }
+                startGame();
                 break;
             }
         }

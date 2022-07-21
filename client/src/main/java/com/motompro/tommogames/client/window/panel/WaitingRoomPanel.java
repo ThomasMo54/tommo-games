@@ -147,8 +147,11 @@ public class WaitingRoomPanel extends JPanel {
         startButton.setEnabled(waitingRoom.getGameData().getMinPlayers() == 1);
         startButton.setPreferredSize(new Dimension(130, 40));
         startButton.addActionListener(e -> {
-            waitingRoom.updateRules();
-            waitingRoom.startGame();
+            try {
+                TomMoGames.getInstance().getClient().sendMessage("waitingRoom start");
+            } catch (IOException ex) {
+                TomMoGames.getInstance().getMainWindow().showError(MainWindow.DEFAULT_ERROR_MESSAGE);
+            }
         });
         constraints.gridx = 1;
         buttonsPanel.add(startButton, constraints);

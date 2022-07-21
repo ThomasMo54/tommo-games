@@ -118,9 +118,17 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                 if(splitMessage.length < 4 || !client.getRoom().isPresent() || !(client.getRoom().get() instanceof GameRoom))
                     return;
                 GameRoom room = (GameRoom) client.getRoom().get();
-                room.broadcast(new HashSet<>(Collections.singletonList(client)), message);
+                room.broadcast(message);
                 for(int i = 2; i < splitMessage.length; i += 2)
                     room.getRules().set(splitMessage[i], splitMessage[i + 1]);
+                break;
+            }
+            case "start": {
+                if(!client.getRoom().isPresent() || !(client.getRoom().get() instanceof GameRoom))
+                    return;
+                GameRoom room = (GameRoom) client.getRoom().get();
+                room.broadcast(createRoomRulesString(room));
+                room.broadcast("waitingRoom start");
                 break;
             }
         }
