@@ -147,6 +147,7 @@ public class WaitingRoomPanel extends JPanel {
         startButton.setEnabled(waitingRoom.getGameData().getMinPlayers() == 1);
         startButton.setPreferredSize(new Dimension(130, 40));
         startButton.addActionListener(e -> {
+            waitingRoom.updateRules();
             waitingRoom.startGame();
         });
         constraints.gridx = 1;

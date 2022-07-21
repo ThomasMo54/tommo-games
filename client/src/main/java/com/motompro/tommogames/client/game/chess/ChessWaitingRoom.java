@@ -22,7 +22,6 @@ public class ChessWaitingRoom extends WaitingRoom {
 
     @Override
     public void startGame() {
-        updateRules();
         new ChessGame(getGameData(), rules);
     }
 
