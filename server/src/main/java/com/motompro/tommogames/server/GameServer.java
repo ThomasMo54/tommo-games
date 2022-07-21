@@ -119,6 +119,8 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                     return;
                 GameRoom room = (GameRoom) client.getRoom().get();
                 room.broadcast(new HashSet<>(Collections.singletonList(client)), message);
+                for(int i = 2; i < splitMessage.length; i += 2)
+                    room.getRules().set(splitMessage[i], splitMessage[i + 1]);
                 break;
             }
         }
@@ -160,7 +162,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                 return;
             }
             GameRoom room = roomOpt.get();
-            if(room.getClientNumber() >= room.getGame().getMaxPlayers()) {
+            if(room.getClientNumber() >= room.getGameData().getMaxPlayers()) {
                 client.sendMessage("waitingRoom full");
                 return;
             }
@@ -168,6 +170,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
             Logger.log("Client " + client.getUuid() + " joined room " + room.getUuid());
             client.sendMessage("waitingRoom joinSuccess " + code);
             sendRoomPlayerList(room);
+            client.sendMessage(createRoomRulesString(room));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -182,6 +185,15 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                     playerListStringBuilder.append(" ").append(gameClient.getUuid()).append(" ").append(gameClient.getName().get());
                 });
         room.broadcast(playerListStringBuilder.toString());
+    }
+
+    private String createRoomRulesString(GameRoom room) {
+        StringBuilder rulesBuilder = new StringBuilder();
+        rulesBuilder.append("waitingRoom rules");
+        room.getRules().getAll().forEach((rule, value) -> {
+            rulesBuilder.append(" ").append(rule).append(" ").append(value);
+        });
+        return rulesBuilder.toString();
     }
 
     private void closeRoom(GameRoom room) {

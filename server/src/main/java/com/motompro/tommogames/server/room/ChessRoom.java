@@ -6,15 +6,14 @@ import com.motompro.tommogames.server.GameClient;
 
 public class ChessRoom extends GameRoom {
 
-    private final GameData gameData;
+    private static final GameData GAME_DATA = GameRegistry.getGames().get(GameRegistry.CHESS_ID);
 
     public ChessRoom(String code, GameClient owner) {
         super(code, owner);
-        this.gameData = GameRegistry.getGames().get(GameRegistry.CHESS_ID);
     }
 
     @Override
-    public GameData getGame() {
-        return gameData;
+    public GameData getGameData() {
+        return GAME_DATA;
     }
 }

@@ -31,4 +31,8 @@ public class GameRules {
     public boolean getBoolean(String rule) {
         return (boolean) rules.get(rule);
     }
+
+    public Map<String, Object> getAll() {
+        return rules;
+    }
 }
