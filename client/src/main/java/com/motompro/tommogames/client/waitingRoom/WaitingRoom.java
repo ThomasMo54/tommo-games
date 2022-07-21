@@ -14,7 +14,7 @@ import java.util.*;
 
 public abstract class WaitingRoom implements ServerListener {
 
-    private final boolean owner;
+    protected final boolean owner;
     private String code;
     private WaitingRoomPanel panel;
     private final Map<UUID, String> players = new HashMap<>();
@@ -100,6 +100,13 @@ public abstract class WaitingRoom implements ServerListener {
                 }
                 window.showPanel(new GamesMenuPanel());
                 window.showWarning("Exclusion", "Vous avez été exclu de la salle d'attente");
+                break;
+            }
+            case "rules": {
+                if(splitMessage.length < 4)
+                    return;
+                for(int i = 2; i < splitMessage.length; i += 2)
+                    rulePanels.get(splitMessage[i]).setValue(splitMessage[i + 1]);
                 break;
             }
         }

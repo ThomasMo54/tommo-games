@@ -21,10 +21,10 @@ public class ChessWaitingRoom extends WaitingRoom {
     }
 
     private void initRulePanels() {
-        rulePanels.put("timer", new OneChoiceRulePanel<>("Timer", new HashMap<String, Boolean>() {{
+        rulePanels.put("timer", new OneChoiceRulePanel<>("timer", "Timer", getRules().getBoolean("timer"), owner, new HashMap<String, Boolean>() {{
             put("Avec", true);
             put("Sans", false);
-        }}, getRules().getBoolean("timer")));
-        rulePanels.put("timerTime", new IntegerSpinnerRulePanel("Temps du timer (s)", getRules().getInteger("timerTime"), 1, 3600, 1));
+        }}));
+        rulePanels.put("timerTime", new IntegerSpinnerRulePanel("timerTime", "Temps du timer (s)", getRules().getInteger("timerTime"), owner, 1, 3600, 1));
     }
 }

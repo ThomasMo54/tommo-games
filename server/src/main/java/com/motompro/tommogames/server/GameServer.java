@@ -10,9 +10,7 @@ import com.motompro.tommogames.server.room.ChessRoom;
 import com.motompro.tommogames.server.room.GameRoom;
 
 import java.io.IOException;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class GameServer extends Server<GameClient> implements ClientListener<GameClient> {
 
@@ -59,7 +57,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                 break;
             }
             case "waitingRoom": {
-                handleWaitingRoom(client, splitMessage);
+                handleWaitingRoom(client, splitMessage, message);
                 break;
             }
         }
@@ -83,7 +81,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
         }
     }
 
-    private void handleWaitingRoom(GameClient client, String[] splitMessage) {
+    private void handleWaitingRoom(GameClient client, String[] splitMessage, String message) {
         if(splitMessage.length < 2)
             return;
         switch(splitMessage[1]) {
@@ -115,6 +113,14 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
                 if(splitMessage.length < 3 || !client.getRoom().isPresent() || !(client.getRoom().get() instanceof GameRoom))
                     return;
                 kickRoom((GameRoom) client.getRoom().get(), getClients().get(UUID.fromString(splitMessage[2])));
+                break;
+            }
+            case "rules": {
+                if(splitMessage.length < 4 || !client.getRoom().isPresent() || !(client.getRoom().get() instanceof GameRoom))
+                    return;
+                GameRoom room = (GameRoom) client.getRoom().get();
+                room.broadcast(new HashSet<>(Collections.singletonList(client)), message);
+                break;
             }
         }
     }

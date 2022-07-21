@@ -114,7 +114,7 @@ public class WaitingRoomPanel extends JPanel {
         constraints.insets = new Insets(0, 0, 10, 0);
         constraints.weighty = 0;
         AtomicInteger atomicGridY = new AtomicInteger();
-        waitingRoom.getRulePanels().forEach(rulePanel -> {
+        waitingRoom.getRulePanels().values().forEach(rulePanel -> {
             constraints.gridy = atomicGridY.getAndIncrement();
             rulesPanel.add(rulePanel, constraints);
         });
