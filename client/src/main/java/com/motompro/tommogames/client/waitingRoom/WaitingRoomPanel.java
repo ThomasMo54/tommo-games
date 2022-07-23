@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WaitingRoomPanel extends JPanel {
@@ -158,7 +159,7 @@ public class WaitingRoomPanel extends JPanel {
         buttonsPanel.add(startButton, constraints);
     }
 
-    public void updatePlayerList(Set<Player> players) {
+    public void updatePlayerList(List<Player> players) {
         playerCountLabel.setText(players.size() + " / " + waitingRoom.getGameData().getMaxPlayers());
         if(startButton != null)
             startButton.setEnabled(players.size() >= waitingRoom.getGameData().getMinPlayers());

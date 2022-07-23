@@ -206,7 +206,7 @@ public class GameServer extends Server<GameClient> implements ClientListener<Gam
 
     private void closeRoom(GameRoom room) {
         room.broadcast("waitingRoom kick");
-        room.removeClients(room.getClients());
+        this.removeRoom(room);
     }
 
     private void kickRoom(GameRoom room, GameClient kickedClient) {

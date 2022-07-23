@@ -17,7 +17,7 @@ public abstract class WaitingRoom implements ServerListener {
     protected final boolean owner;
     private String code;
     private WaitingRoomPanel panel;
-    protected final Set<Player> players = new HashSet<>();
+    protected final List<Player> players = new ArrayList<>();
     protected final GameRules rules;
     protected final Map<String, RulePanel> rulePanels = new HashMap<>();
 
@@ -46,6 +46,10 @@ public abstract class WaitingRoom implements ServerListener {
     public abstract GameData getGameData();
 
     public abstract void startGame();
+
+    protected void playerListUpdated() {
+        panel.updatePlayerList(players);
+    }
 
     @Override
     public void onServerMessage(String message) {
@@ -87,7 +91,7 @@ public abstract class WaitingRoom implements ServerListener {
                 players.clear();
                 for(int i = 2; i < splitMessage.length; i += 2)
                     players.add(new Player(UUID.fromString(splitMessage[i]), splitMessage[i + 1]));
-                panel.updatePlayerList(players);
+                playerListUpdated();
                 break;
             }
             case "kick": {

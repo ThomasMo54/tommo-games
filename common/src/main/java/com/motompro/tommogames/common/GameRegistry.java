@@ -13,10 +13,11 @@ public class GameRegistry {
         GAMES.put(CHESS_ID, GameData.builder()
                 .withId(CHESS_ID)
                 .withName("Échecs")
-                .withMaxPlayers(1)
+                .withMaxPlayers(2)
                 .withDefaultRules(new GameRules()
                         .set("timer", false)
                         .set("timerTime", 60)
+                        .set("whitePlayer", null)
                 )
                 .build()
         );
