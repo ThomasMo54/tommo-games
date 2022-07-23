@@ -3,6 +3,7 @@ package com.motompro.tommogames.client.waitingRoom;
 import com.motompro.tcplib.client.Client;
 import com.motompro.tcplib.client.ServerListener;
 import com.motompro.tommogames.client.TomMoGames;
+import com.motompro.tommogames.client.game.Player;
 import com.motompro.tommogames.client.waitingRoom.rulePanel.RulePanel;
 import com.motompro.tommogames.client.window.MainWindow;
 import com.motompro.tommogames.client.window.panel.GamesMenuPanel;
@@ -16,7 +17,7 @@ public abstract class WaitingRoom implements ServerListener {
     protected final boolean owner;
     private String code;
     private WaitingRoomPanel panel;
-    private final Map<UUID, String> players = new HashMap<>();
+    protected final Set<Player> players = new HashSet<>();
     protected final GameRules rules;
     protected final Map<String, RulePanel> rulePanels = new HashMap<>();
 
@@ -91,7 +92,7 @@ public abstract class WaitingRoom implements ServerListener {
                     return;
                 players.clear();
                 for(int i = 2; i < splitMessage.length; i += 2)
-                    players.put(UUID.fromString(splitMessage[i]), splitMessage[i + 1]);
+                    players.add(new Player(UUID.fromString(splitMessage[i]), splitMessage[i + 1]));
                 panel.updatePlayerList(players);
                 break;
             }

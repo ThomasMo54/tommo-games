@@ -2,6 +2,7 @@ package com.motompro.tommogames.client.waitingRoom;
 
 import com.motompro.tommogames.client.GameClient;
 import com.motompro.tommogames.client.TomMoGames;
+import com.motompro.tommogames.client.game.Player;
 import com.motompro.tommogames.client.window.MainWindow;
 import com.motompro.tommogames.client.window.panel.GamesMenuPanel;
 
@@ -157,7 +158,7 @@ public class WaitingRoomPanel extends JPanel {
         buttonsPanel.add(startButton, constraints);
     }
 
-    public void updatePlayerList(Map<UUID, String> players) {
+    public void updatePlayerList(Set<Player> players) {
         playerCountLabel.setText(players.size() + " / " + waitingRoom.getGameData().getMaxPlayers());
         if(startButton != null)
             startButton.setEnabled(players.size() >= waitingRoom.getGameData().getMinPlayers());
@@ -168,9 +169,9 @@ public class WaitingRoomPanel extends JPanel {
         constraints.weightx = 1;
         constraints.weighty = 0;
         AtomicInteger atomicGridY = new AtomicInteger();
-        players.forEach((playerUuid, playerName) -> {
-            boolean hasKickButton = waitingRoom.isOwner() && !playerUuid.equals(TomMoGames.getInstance().getUuid());
-            PlayerPanel playerPanel = new PlayerPanel(playerUuid, playerName, hasKickButton);
+        players.forEach(player -> {
+            boolean hasKickButton = waitingRoom.isOwner() && !player.getUuid().equals(TomMoGames.getInstance().getUuid());
+            PlayerPanel playerPanel = new PlayerPanel(player.getUuid(), player.getName(), hasKickButton);
             playerPanel.setBackground(atomicGridY.get() % 2 == 0 ? PLAYER_PANEL_COLOR_1 : PLAYER_PANEL_COLOR_2);
             constraints.gridy = atomicGridY.getAndIncrement();
             playersPanel.add(playerPanel, constraints);

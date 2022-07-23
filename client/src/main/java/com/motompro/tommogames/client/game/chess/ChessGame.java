@@ -11,15 +11,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
+import java.util.Set;
 
-public class ChessGame extends Game {
+public class ChessGame extends Game<ChessPlayer> {
 
     private final BoardPanel boardPanel;
 
-    public ChessGame(GameData data, GameRules rules) {
-        super(data, rules);
+    public ChessGame(GameData data, GameRules rules, Set<ChessPlayer> players) {
+        super(data, rules, players);
         this.boardPanel = new BoardPanel();
         initComponents();
     }
