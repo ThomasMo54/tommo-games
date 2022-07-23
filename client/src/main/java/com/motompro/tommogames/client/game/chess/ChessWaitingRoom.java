@@ -8,8 +8,8 @@ import com.motompro.tommogames.common.GameData;
 import com.motompro.tommogames.common.GameRegistry;
 
 import java.util.HashMap;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.UUID;
 
 public class ChessWaitingRoom extends WaitingRoom {
 
@@ -27,7 +27,11 @@ public class ChessWaitingRoom extends WaitingRoom {
 
     @Override
     public void startGame() {
-        Set<ChessPlayer> chessPlayers = players.stream().map(player -> new ChessPlayer(player.getUuid(), player.getName(), whitePlayerRulePanel.getValue().toString().equals(player.getUuid().toString()))).collect(Collectors.toSet());
+        Map<UUID, ChessPlayer> chessPlayers = new HashMap<>();
+        players.forEach(player -> {
+            boolean white = whitePlayerRulePanel.getValue().toString().equals(player.getUuid().toString());
+            chessPlayers.put(player.getUuid(), new ChessPlayer(player.getUuid(), player.getName(), white));
+        });
         new ChessGame(getGameData(), rules, chessPlayers);
     }
 

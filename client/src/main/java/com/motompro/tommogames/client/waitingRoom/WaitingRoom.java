@@ -17,7 +17,7 @@ public abstract class WaitingRoom implements ServerListener {
     protected final boolean owner;
     private String code;
     private WaitingRoomPanel panel;
-    protected final List<Player> players = new ArrayList<>();
+    protected final Set<Player> players = new HashSet<>();
     protected final GameRules rules;
     protected final Map<String, RulePanel> rulePanels = new HashMap<>();
 

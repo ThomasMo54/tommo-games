@@ -11,15 +11,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.Set;
+import java.util.Map;
+import java.util.UUID;
 
 public class ChessGame extends Game<ChessPlayer> {
 
+    private final boolean whiteSide;
     private final BoardPanel boardPanel;
 
-    public ChessGame(GameData data, GameRules rules, Set<ChessPlayer> players) {
+    public ChessGame(GameData data, GameRules rules, Map<UUID, ChessPlayer> players) {
         super(data, rules, players);
-        this.boardPanel = new BoardPanel();
+        this.whiteSide = players.get(TomMoGames.getInstance().getUuid()).isWhite();
+        this.boardPanel = new BoardPanel(whiteSide);
         initComponents();
     }
 

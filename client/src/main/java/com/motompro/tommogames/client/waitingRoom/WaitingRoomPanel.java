@@ -159,7 +159,7 @@ public class WaitingRoomPanel extends JPanel {
         buttonsPanel.add(startButton, constraints);
     }
 
-    public void updatePlayerList(List<Player> players) {
+    public void updatePlayerList(Set<Player> players) {
         playerCountLabel.setText(players.size() + " / " + waitingRoom.getGameData().getMaxPlayers());
         if(startButton != null)
             startButton.setEnabled(players.size() >= waitingRoom.getGameData().getMinPlayers());

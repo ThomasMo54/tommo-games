@@ -8,6 +8,12 @@ public class BoardPanel extends JPanel {
     private static final Color LIGHT_SQUARE_COLOR = new Color(235, 168, 52);
     private static final Color DARK_SQUARE_COLOR = new Color(158, 105, 25);
 
+    private final boolean whiteSide;
+
+    public BoardPanel(boolean whiteSide) {
+        this.whiteSide = whiteSide;
+    }
+
     @Override
     public void paint(Graphics g) {
         Dimension size = this.getSize();
