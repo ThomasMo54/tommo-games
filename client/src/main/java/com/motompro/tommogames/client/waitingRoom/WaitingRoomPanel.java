@@ -1,9 +1,9 @@
-package com.motompro.tommogames.client.window.panel;
+package com.motompro.tommogames.client.waitingRoom;
 
 import com.motompro.tommogames.client.GameClient;
 import com.motompro.tommogames.client.TomMoGames;
-import com.motompro.tommogames.client.waitingRoom.WaitingRoom;
 import com.motompro.tommogames.client.window.MainWindow;
+import com.motompro.tommogames.client.window.panel.GamesMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;

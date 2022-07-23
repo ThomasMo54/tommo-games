@@ -6,7 +6,6 @@ import com.motompro.tommogames.client.TomMoGames;
 import com.motompro.tommogames.client.waitingRoom.rulePanel.RulePanel;
 import com.motompro.tommogames.client.window.MainWindow;
 import com.motompro.tommogames.client.window.panel.GamesMenuPanel;
-import com.motompro.tommogames.client.window.panel.WaitingRoomPanel;
 import com.motompro.tommogames.common.GameData;
 import com.motompro.tommogames.common.GameRules;
 
@@ -112,9 +111,7 @@ public abstract class WaitingRoom implements ServerListener {
                 break;
             }
             case "start": {
-                synchronized(client.getServerListeners()) {
-                    client.removeServerListener(this);
-                }
+                client.removeServerListener(this);
                 startGame();
                 break;
             }
