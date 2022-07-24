@@ -1,5 +1,7 @@
 package com.motompro.tommogames.client.game.chess.panel;
 
+import com.motompro.tommogames.client.game.chess.ChessGame;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,12 +19,14 @@ public class BoardPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         Dimension size = this.getSize();
-        int squareSize = (int) (size.getWidth() / 8);
+        int squareSize = (int) (size.getWidth() / ChessGame.BOARD_SIZE);
         // Draw board
-        for(int y = 0; y < 8; y++)
-            for(int x = 0; x < 8; x++) {
+        for(int y = 0; y < ChessGame.BOARD_SIZE; y++)
+            for(int x = 0; x < ChessGame.BOARD_SIZE; x++) {
                 g.setColor((x + y) % 2 == 0 ? LIGHT_SQUARE_COLOR : DARK_SQUARE_COLOR);
                 g.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
             }
+        // Draw pieces
+
     }
 }
